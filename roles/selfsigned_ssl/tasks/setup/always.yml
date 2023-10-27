@@ -51,7 +51,7 @@
     key_usage: ['keyCertSign']
     key_usage_critical: true
   register: ca_csr
-  tags: molecule-idempotence-notest
+  changed_when: false  # This is ephemeral, so it's always changed, the next task will check if it's already signed
 
 - name: Self-sign CA cert
   become: true
@@ -75,7 +75,7 @@
     privatekey_path: "{{ utils_selfsigned_ssl_cert_key_path }}/{{ utils_selfsigned_ssl_cert_key_file }}"
     subject_alt_name: ["DNS:{{ utils_selfsigned_ssl_cert_dns_name }}"]
   register: csr
-  tags: molecule-idempotence-notest
+  changed_when: false  # This is ephemeral, so it's always changed, the next task will check if it's already signed
 
 - name: Check if service cert exists
   become: true
