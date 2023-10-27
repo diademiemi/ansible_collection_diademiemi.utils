@@ -10,6 +10,7 @@ nginx_basic_configs_basic_rev_proxies:
     external_ip: 0.0.0.0
     external_http_port: 80
     external_https_port: 443
+    https: false
     locations:
       - location: /
         # [custom] default: false

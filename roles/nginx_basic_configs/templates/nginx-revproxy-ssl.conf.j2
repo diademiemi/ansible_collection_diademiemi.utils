@@ -1,15 +1,23 @@
+{% if item.https %}
 server {
     listen {{ item.external_ip }}:{{ item.external_http_port }};
     server_name {{ item.server_name }};
     return 301 https://$host$request_uri;
 }
+{% endif %}
 
 server {
+    {% if item.https %}
     listen {{ item.external_ip }}:{{ item.external_https_port }} ssl;
+    {% else %}
+    listen {{ item.external_ip }}:{{ item.external_http_port }};
+    {% endif %}
     server_name {{ item.server_name }};
+    {% if item.https %}
     server_tokens off;
     ssl_certificate {{ item.cert_path }};
     ssl_certificate_key {{ item.key_path }};
+    {% endif %}
 
 {% for location in item.locations | default([]) %}
     location {{ location.location }} {
