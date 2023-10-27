@@ -1,0 +1,4 @@
+---
+_nginx_basic_configs_config_dir: /etc/nginx/sites/enabled.d/
+
+...

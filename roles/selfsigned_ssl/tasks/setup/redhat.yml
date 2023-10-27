@@ -1,0 +1,8 @@
+---
+- name: Ensure pip is installed
+  become: true
+  ansible.builtin.yum:
+    name: python3-pip
+    state: present
+
+...

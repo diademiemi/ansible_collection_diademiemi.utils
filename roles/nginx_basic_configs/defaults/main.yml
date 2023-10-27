@@ -1,0 +1,30 @@
+---
+nginx_basic_configs_config_dir: "{{ _nginx_basic_configs_config_dir }}"  # In vars/< distro >.yml
+nginx_basic_configs_config_name: "{{ item.config_name }}.conf"
+
+nginx_basic_configs_basic_rev_proxies:
+  - config_name: ssl.example.com
+    server_name: ssl.example.com
+    cert_path: /etc/pki/tls/certs/generic.pem'
+    key_path: /etc/pki/tls/certs/generic.pem'
+    external_ip: 0.0.0.0
+    external_http_port: 80
+    external_https_port: 443
+    locations:
+      - location: /
+        # [custom] default: false
+        custom: false  # When set to true will only use the extra_lines
+        # [proxy_pass] default: http://127.0.0.1:8080/
+        proxy_pass: http://127.0.0.1:8080
+        # [proxy_standard_headers] default: true
+        proxy_standard_headers: true  # When set to false you will need to add the headers manually in extra_lines
+        # [extra_lines] default: []
+        extra_lines:
+          - "proxy_intercept_errors on;"
+          - client_max_body_size 20M;
+          # - "rewrite ^/url/(.*) /$1 break;"
+          # - "proxy_set_header        X-Forwarded-Proto $scheme;"
+          # - "proxy_set_header        X-Forwarded-Port  $server_port;"
+          # - "proxy_set_header        X-Forwarded-For   $proxy_add_x_forwarded_for;"
+
+...

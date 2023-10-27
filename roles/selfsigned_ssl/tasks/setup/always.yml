@@ -1,0 +1,120 @@
+---
+- name: Install pip cryptography
+  become: true
+  ansible.builtin.pip:
+    name: cryptography
+    state: present
+
+- name: Ensure owner and group exist
+  become: true
+  ansible.builtin.group:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - "{{ utils_selfsigned_ssl_ca_group }}"
+    - "{{ utils_selfsigned_ssl_cert_group }}"
+
+- name: Ensure owner and group exist
+  become: true
+  ansible.builtin.user:
+    name: "{{ item }}"
+    state: present
+    group: "{{ item }}"
+    createhome: false
+  loop:
+    - "{{ utils_selfsigned_ssl_ca_owner }}"
+    - "{{ utils_selfsigned_ssl_cert_owner }}"
+
+- name: Ensure paths
+  become: true
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+  loop:
+    - "{{ utils_selfsigned_ssl_cert_key_path }}"
+    - "{{ utils_selfsigned_ssl_cert_pem_path }}"
+    - "{{ utils_selfsigned_ssl_ca_path }}"
+
+- name: Create CA private key
+  become: true
+  community.crypto.openssl_privatekey:
+    path: "{{ utils_selfsigned_ssl_ca_path }}/{{ utils_selfsigned_ssl_ca_key_file }}"
+    passphrase: "{{ utils_selfsigned_ssl_ca_passphrase }}"
+    cipher: auto
+
+- name: Generate CA CSR
+  become: true
+  community.crypto.openssl_csr_pipe:
+    privatekey_path: "{{ utils_selfsigned_ssl_ca_path }}/{{ utils_selfsigned_ssl_ca_key_file }}"
+    privatekey_passphrase: "{{ utils_selfsigned_ssl_ca_passphrase }}"
+    common_name: "{{ utils_selfsigned_ssl_ca_name }}"
+    use_common_name_for_san: false
+    basic_constraints: ['CA:TRUE']
+    basic_constraints_critical: true
+    key_usage: ['keyCertSign']
+    key_usage_critical: true
+  register: ca_csr
+
+- name: Self-sign CA cert
+  become: true
+  community.crypto.x509_certificate:
+    path: "{{ utils_selfsigned_ssl_ca_path }}/{{ utils_selfsigned_ssl_ca_pem_file }}"
+    csr_content: "{{ ca_csr.csr }}"
+    privatekey_path: "{{ utils_selfsigned_ssl_ca_path }}/{{ utils_selfsigned_ssl_ca_key_file }}"
+    privatekey_passphrase: "{{ utils_selfsigned_ssl_ca_passphrase }}"
+    provider: selfsigned
+
+- name: Create private key
+  become: true
+  community.crypto.openssl_privatekey:
+    path: "{{ utils_selfsigned_ssl_cert_key_path }}/{{ utils_selfsigned_ssl_cert_key_file }}"
+    owner: "{{ utils_selfsigned_ssl_cert_owner }}"
+    group: "{{ utils_selfsigned_ssl_cert_group }}"
+
+- name: Generate CSR for service
+  become: true
+  community.crypto.openssl_csr_pipe:
+    privatekey_path: "{{ utils_selfsigned_ssl_cert_key_path }}/{{ utils_selfsigned_ssl_cert_key_file }}"
+    subject_alt_name: ["DNS:{{ utils_selfsigned_ssl_cert_dns_name }}"]
+  register: csr
+
+- name: Check if service cert exists
+  become: true
+  ansible.builtin.stat:
+    path: "{{ utils_selfsigned_ssl_cert_pem_path }}/{{ utils_selfsigned_ssl_cert_name }}.pem"
+  register: cert_exists
+
+- name: Read existing service cert if it exists
+  become: true
+  ansible.builtin.slurp:
+    src: "{{ utils_selfsigned_ssl_cert_pem_path }}/{{ utils_selfsigned_ssl_cert_name }}.pem"
+  when: cert_exists.stat.exists
+  register: cert
+
+- name: Sign service cert with CA
+  become: true
+  community.crypto.x509_certificate_pipe:
+    content: "{{ (cert.content | b64decode) if cert_exists.stat.exists else omit }}"
+    csr_content: "{{ csr.csr }}"
+    provider: ownca
+    ownca_path: "{{ utils_selfsigned_ssl_ca_path }}/{{ utils_selfsigned_ssl_ca_pem_file }}"
+    ownca_privatekey_path: "{{ utils_selfsigned_ssl_ca_path }}/{{ utils_selfsigned_ssl_ca_key_file }}"
+    ownca_privatekey_passphrase: "{{ utils_selfsigned_ssl_ca_passphrase }}"
+    ownca_not_after: +365d
+    ownca_not_before: "-1d"
+  register: signed_cert
+
+- name: Save service cert # noqa no-handler
+  become: true
+  ansible.builtin.copy:
+    dest: "{{ utils_selfsigned_ssl_cert_pem_path }}/{{ utils_selfsigned_ssl_cert_name }}.pem"
+    content: "{{ signed_cert.certificate }}"
+    mode: "0644"
+    owner: "{{ utils_selfsigned_ssl_cert_owner }}"
+    group: "{{ utils_selfsigned_ssl_cert_group }}"
+  when: signed_cert is changed
+
+...

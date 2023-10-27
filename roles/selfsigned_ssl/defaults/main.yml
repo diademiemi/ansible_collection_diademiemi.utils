@@ -1,0 +1,18 @@
+---
+utils_selfsigned_ssl_ca_name: 'selfsigned-ca'
+utils_selfsigned_ssl_ca_path: '/etc/openssl/certs/ca'
+utils_selfsigned_ssl_ca_key_file: '{{ utils_selfsigned_ssl_ca_name }}.key'
+utils_selfsigned_ssl_ca_pem_file: '{{ utils_selfsigned_ssl_ca_name }}.pem'
+utils_selfsigned_ssl_cert_key_path: '/etc/pki/tls/private/'
+utils_selfsigned_ssl_cert_pem_path: '/etc/pki/tls/certs/'
+utils_selfsigned_ssl_cert_name: 'generic'
+utils_selfsigned_ssl_cert_key_file: '{{ utils_selfsigned_ssl_cert_name }}.key'
+utils_selfsigned_ssl_cert_pem_file: '{{ utils_selfsigned_ssl_cert_name }}.pem'
+utils_selfsigned_ssl_ca_passphrase: 'default_passphrase'
+utils_selfsigned_ssl_cert_dns_name: "{{ ansible_fqdn }}"
+utils_selfsigned_ssl_ca_owner: 'root'
+utils_selfsigned_ssl_ca_group: 'root'
+utils_selfsigned_ssl_cert_owner: 'root'
+utils_selfsigned_ssl_cert_group: 'root'
+
+...

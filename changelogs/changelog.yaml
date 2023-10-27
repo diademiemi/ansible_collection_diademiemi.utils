@@ -1,0 +1,12 @@
+ancestor: null
+releases:
+  1.0.0:
+    changes:
+      major_changes:
+      - add role for basic nginx
+      - add role to generate ssl
+      release_summary: first release
+    fragments:
+    - nginx.yml
+    - ssl.yml
+    release_date: '2023-10-27'

@@ -1,0 +1,13 @@
+---
+- name: Create all reverse proxy configs
+  become: true
+  ansible.builtin.template:
+    src: "nginx-revproxy-ssl.conf.j2"
+    dest: "{{ nginx_basic_configs_config_dir }}/{{ nginx_basic_configs_config_name }}"
+    owner: root
+    group: root
+    mode: '0644'
+  loop: "{{ nginx_basic_configs_basic_rev_proxies }}"
+  notify: Reload nginx
+
+...
