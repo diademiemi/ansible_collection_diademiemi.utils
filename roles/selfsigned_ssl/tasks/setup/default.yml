@@ -1,8 +1,9 @@
 ---
-- name: Ensure pip is installed
-  become: true
-  ansible.builtin.package:
-    name: python3-pip
-    state: present
+- name: Include Pip role
+  ansible.builtin.include_role:
+    name: diademiemi.python.pip
+  vars:
+    python_pip_global_packages:
+      - name: cryptography
 
 ...
