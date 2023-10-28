@@ -1,8 +1,7 @@
 Ansible Role Template
 =========
 
-[![Molecule Test](https://github.com/diademiemi/ansible_role_selfsigned_ssl/actions/workflows/molecule.yml/badge.svg)](https://github.com/diademiemi/ansible_role_selfsigned_ssl/actions/workflows/molecule.yml)
-
+[![Molecule test](https://github.com/diademiemi/ansible_collection_diademiemi.utils/actions/workflows/ansible-role-selfsigned_ssl.yml/badge.svg)](https://github.com/diademiemi/ansible_collection_diademiemi.utils/actions/workflows/ansible-role-selfsigned_ssl.yml)
 This is an Ansible role to install and configure selfsigned_ssl.
 
 Include more information about selfsigned_ssl in this section.
@@ -28,11 +27,23 @@ Role Variables
 
 Variable | Default | Description
 --- | --- | ---
-<!--
-`variable` | `default` | Variable example
-`long_variable` | See [defaults/main.yml](./defaults/main.yml) | Variable referring to defaults
-`distro_specific_variable` | See [vars/debian.yml](./vars/debian.yml) | Variable referring to distro-specific variables
--->
+Variable | Default | Description
+---|---|---
+`utils_selfsigned_ssl_ca_name` | `'selfsigned-ca'` | Name of the self-signed Certificate Authority.
+`utils_selfsigned_ssl_ca_path` | `'/etc/openssl/certs/ca'` | File path where the CA certificate will be stored.
+`utils_selfsigned_ssl_ca_key_file` | `'{{ utils_selfsigned_ssl_ca_name }}.key'` | File name for the CA key.
+`utils_selfsigned_ssl_ca_pem_file` | `'{{ utils_selfsigned_ssl_ca_name }}.pem'` | File name for the CA PEM certificate.
+`utils_selfsigned_ssl_cert_key_path` | `'/etc/pki/tls/private/'` | Directory path where the SSL certificate key will be stored.
+`utils_selfsigned_ssl_cert_pem_path` | `'/etc/pki/tls/certs/'` | Directory path where the SSL certificate will be stored.
+`utils_selfsigned_ssl_cert_name` | `'generic'` | Name of the self-signed SSL certificate.
+`utils_selfsigned_ssl_cert_key_file` | `'{{ utils_selfsigned_ssl_cert_name }}.key'` | File name for the SSL certificate key.
+`utils_selfsigned_ssl_cert_pem_file` | `'{{ utils_selfsigned_ssl_cert_name }}.pem'` | File name for the SSL certificate PEM file.
+`utils_selfsigned_ssl_ca_passphrase` | `'default_passphrase'` | Passphrase for the Certificate Authority.
+`utils_selfsigned_ssl_cert_dns_name` | `"{{ ansible_fqdn }}"` | DNS name for the SSL certificate, defaults to the fully qualified domain name of the host.
+`utils_selfsigned_ssl_ca_owner` | `'root'` | Owner of the CA certificate and key files.
+`utils_selfsigned_ssl_ca_group` | `'root'` | Group owner of the CA certificate and key files.
+`utils_selfsigned_ssl_cert_owner` | `'root'` | Owner of the SSL certificate and key files.
+`utils_selfsigned_ssl_cert_group` | `'root'` | Group owner of the SSL certificate and key files.
 
 Dependencies
 ------------
