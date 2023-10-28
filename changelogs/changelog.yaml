@@ -10,3 +10,13 @@ releases:
     - nginx.yml
     - ssl.yml
     release_date: '2023-10-27'
+  2.0.0:
+    changes:
+      major_changes:
+      - Add documentation
+      - Rework CI
+      - Rewrite some vars
+      release_summary: Version 2
+    fragments:
+    - 2.yml
+    release_date: '2023-10-28'
