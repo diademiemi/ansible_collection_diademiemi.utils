@@ -9,7 +9,7 @@ name: Molecule Tests nginx_basic_configs
     branches:
       - main
     paths:
-      - "roles/nginx_basic_configs"
+      - "roles/nginx_basic_configs/**"
   workflow_dispatch:
 
 jobs:

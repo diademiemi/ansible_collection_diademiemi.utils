@@ -9,7 +9,7 @@ name: Molecule Tests selfsigned_ssl
     branches:
       - main
     paths:
-      - "roles/selfsigned_ssl"
+      - "roles/selfsigned_ssl/**"
   workflow_dispatch:
 
 jobs:
