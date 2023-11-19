@@ -24,7 +24,7 @@
       failed_when: false
 
   tasks:
-    - name: "Include diademiemi.nginx_basic_configs"
+    - name: "Include diademiemi.utils.nginx_basic_configs"
       ansible.builtin.include_role:
         name: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
 

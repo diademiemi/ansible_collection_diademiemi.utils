@@ -1,5 +1,5 @@
 ---
-- name: Run diademiemi.nginx_basic_configs on localhost
+- name: Run diademiemi.utils.nginx_basic_configs on localhost
   hosts: localhost
   tasks:
     - name: "Ensure temporary roles directory exists"
@@ -12,7 +12,7 @@
         src: "{{ lookup('env', 'PWD') }}"
         dest: "~/.ansible/roles/{{ lookup('env', 'PWD') | basename }}"
         state: link
-    - name: "Include diademiemi.nginx_basic_configs"
+    - name: "Include diademiemi.utils.nginx_basic_configs"
       ansible.builtin.include_role:
         name: "{{ lookup('env', 'PWD') | basename }}"
     - name: "Remove temporary symlink in roles directory"

@@ -18,7 +18,7 @@ These platforms are supported:
 - EL 8 (Tested on Rocky Linux 8)
 - EL 9 (Tested on Rocky Linux 9)
 - Fedora 38
-- openSUSE Leap 15.4
+- openSUSE Leap 15.5
 
 <!--
 - List hardware requirements here  
@@ -61,10 +61,10 @@ Example Playbook
 ----------------
 
 ```yaml
-- name: Use diademiemi.nginx_basic_configs role
+- name: Use diademiemi.utils.nginx_basic_configs role
   hosts: "{{ target | default('nginx_basic_configs') }}"
   roles:
-    - role: "diademiemi.nginx_basic_configs"
+    - role: "diademiemi.utils.nginx_basic_configs"
       tags: ['diademiemi', 'nginx_basic_configs', 'setup']    ```
 
 ```

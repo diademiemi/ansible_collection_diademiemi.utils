@@ -17,7 +17,7 @@ These platforms are supported:
 - EL 8 (Tested on Rocky Linux 8)
 - EL 9 (Tested on Rocky Linux 9)
 - Fedora 38
-- openSUSE Leap 15.4
+- openSUSE Leap 15.5
 
 <!--
 - List hardware requirements here  
@@ -55,10 +55,10 @@ Example Playbook
 ----------------
 
 ```yaml
-- name: Use diademiemi.selfsigned_ssl role
+- name: Use diademiemi.utils.selfsigned_ssl role
   hosts: "{{ target | default('selfsigned_ssl') }}"
   roles:
-    - role: "diademiemi.selfsigned_ssl"
+    - role: "diademiemi.utils.selfsigned_ssl"
       tags: ['diademiemi', 'selfsigned_ssl', 'setup']    ```
 
 ```
